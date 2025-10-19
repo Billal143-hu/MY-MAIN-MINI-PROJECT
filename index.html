@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tafo Municipal Assembly - IT Helpdesk</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --gray: #95a5a6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Authentication Styles */
+        .auth-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .auth-logo-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+        }
+
+        .auth-body {
+            padding: 2rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e1e8ed;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 6px;
+            color: var(--gray);
+        }
+
+        .auth-tab.active {
+            background: white;
+            color: var(--secondary);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            background: var(--secondary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .notification {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification.error {
+            background: #ffebee;
+            color: var(--danger);
+            border: 1px solid #ffcdd2;
+        }
+
+        .notification.success {
+            background: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #c8e6c9;
+        }
+
+        .notification.info {
+            background: #e3f2fd;
+            color: var(--secondary);
+            border: 1px solid #bbdefb;
+        }
+
+        /* Main App Styles */
+        .app-container {
+            display: none;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1a2530);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-badge {
+            background: var(--secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .user-badge.staff {
+            background: var(--success);
+        }
+
+        .user-badge.it {
+            background: var(--warning);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        nav {
+            background: var(--primary);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.total { border-top: 4px solid var(--secondary); }
+        .stat-card.open { border-top: 4px solid var(--warning); }
+        .stat-card.progress { border-top: 4px solid #9b59b6; }
+        .stat-card.resolved { border-top: 4px solid var(--success); }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .ticket {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--secondary);
+            transition: var(--transition);
+        }
+
+        .ticket:hover {
+            transform: translateY(-3px);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .ticket-id {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .priority {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: #ffebee; color: var(--danger); }
+        .priority-medium { background: #fff3e0; color: var(--warning); }
+        .priority-low { background: #e8f5e9; color: var(--success); }
+
+        .status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-new { background: #e3f2fd; color: var(--secondary); }
+        .status-progress { background: #f3e5f5; color: #9b59b6; }
+        .status-resolved { background: #e8f5e9; color: var(--success); }
+
+        .ticket-details {
+            margin: 1rem 0;
+        }
+
+        .ticket-detail {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: var(--dark);
+        }
+
+        .ticket-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #95a5a6;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--secondary);
+        }
+
+        .no-tickets {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+
+        .no-tickets i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
+        .confirmation {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .confirmation-id {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--success);
+            margin: 1rem 0;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .nav-tab {
+                padding: 1rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+                position: relative;
+            }
+
+            .logo {
+                justify-content: center;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .nav-container {
+                display: none;
+            }
+
+            .nav-container.mobile-open {
+                display: block;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-tab {
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                justify-content: center;
+                padding: 1rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .ticket-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .ticket-actions {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .card {
+                padding: 1.2rem;
+                margin: 1rem 0;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            /* Auth responsive */
+            .auth-box {
+                margin: 10px;
+                max-width: 100%;
+            }
+
+            .auth-body {
+                padding: 1.5rem;
+            }
+
+            .auth-tabs {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .auth-tab {
+                text-align: center;
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text h1 {
+                font-size: 1.3rem;
+            }
+            
+            .logo-text p {
+                font-size: 0.7rem;
+            }
+            
+            .filter-options {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .ticket {
+                padding: 1rem;
+            }
+            
+            .ticket-detail {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                min-width: auto;
+                margin-bottom: 0.2rem;
+            }
+
+            .auth-body {
+                padding: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            input, select, textarea {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .user-info {
+                align-items: center;
+            }
+
+            .user-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .auth-header {
+                padding: 1.5rem;
+            }
+            
+            .auth-logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .auth-logo-icon {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading states */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .auth-container, nav, .action-buttons, .ticket-actions, footer, .mobile-menu-btn {
+                display: none !important;
+            }
+            
+            .app-container, .section {
+                display: block !important;
+            }
+            
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Section -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <div class="auth-logo-icon"><i class="fas fa-laptop-house"></i></div>
+                    <div class="logo-text">
+                        <h1>Tafo Municipal Assembly</h1>
+                        <p>IT Helpdesk System</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="auth-tab" data-tab="register">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </div>
+
+                <div id="notification" class="notification"></div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginUsername"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="loginUsername" required placeholder="Enter your username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-block" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="regUsername"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="regUsername" required placeholder="Choose a username" minlength="3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regPassword"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="regPassword" required placeholder="Choose a password" minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regFullName"><i class="fas fa-id-card"></i> Full Name</label>
+                        <input type="text" id="regFullName" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regUserType"><i class="fas fa-users"></i> User Type</label>
+                        <select id="regUserType" required>
+                            <option value="">Select User Type</option>
+                            <option value="staff">Staff Member</option>
+                            <option value="it">IT Staff</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="regDepartmentGroup">
+                        <label for="regDepartment"><i class="fas fa-building"></i> Department</label>
+                        <select id="regDepartment" required>
+                            <option value="">Select Department</option>
+                            <option value="Administration">Administration</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Health">Health</option>
+                            <option value="Education">Education</option>
+                            <option value="Works">Works Department</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block" id="registerBtn">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container" id="appContainer">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="logo-icon"><i class="fas fa-laptop-house"></i></div>
+                        <div class="logo-text">
+                            <h1>Tafo Municipal Assembly</h1>
+                            <p>IT Helpdesk System</p>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <span id="userWelcome">Welcome, User!</span>
+                        <span class="user-badge" id="userBadge">Staff</span>
+                        <button class="btn btn-warning" onclick="authSystem.logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <div class="container" id="navContainer">
+                <ul class="nav-tabs">
+                    <li class="nav-tab active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </li>
+                    <li class="nav-tab" data-tab="report">
+                        <i class="fas fa-plus-circle"></i> Report Issue
+                    </li>
+                    <li class="nav-tab" data-tab="track">
+                        <i class="fas fa-search"></i> Track Issues
+                    </li>
+                    <li class="nav-tab" data-tab="manage" id="manageTab">
+                        <i class="fas fa-cogs"></i> Manage Tickets
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="card">
+                    <h2><i class="fas fa-tachometer-alt"></i> IT Helpdesk Dashboard</h2>
+                    <p>Welcome to the Tafo Municipal Assembly IT Helpdesk System. This platform allows you to report IT issues and track their resolution status.</p>
+                    <div class="action-buttons">
+                        <button class="btn" onclick="helpdesk.showSection('report')">
+                            <i class="fas fa-plus-circle"></i> Report New Issue
+                        </button>
+                        <button class="btn btn-success" onclick="helpdesk.showSection('track')">
+                            <i class="fas fa-search"></i> Track Existing Issue
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card total" onclick="helpdesk.filterTickets('all')">
+                        <span class="stat-number" id="total-tickets">0</span>
+                        <span class="stat-label">Total Tickets</span>
+                    </div>
+                    <div class="stat-card open" onclick="helpdesk.filterTickets('new')">
+                        <span class="stat-number" id="open-tickets">0</span>
+                        <span class="stat-label">Open Tickets</span>
+                    </div>
+                    <div class="stat-card progress" onclick="helpdesk.filterTickets('in-progress')">
+                        <span class="stat-number" id="progress-tickets">0</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                    <div class="stat-card resolved" onclick="helpdesk.filterTickets('resolved')">
+                        <span class="stat-number" id="resolved-tickets">0</span>
+                        <span class="stat-label">Resolved</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="ticket-header">
+                        <h2><i class="fas fa-history"></i> Recent Issues</h2>
+                        <button class="btn" onclick="helpdesk.showSection('track')">
+                            <i class="fas fa-list"></i> View All Issues
+                        </button>
+                    </div>
+                    <div id="recent-tickets">
+                        <!-- Recent tickets will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Report Issue Section -->
+            <section id="report" class="section">
+                <div class="card">
+                    <h2><i class="fas fa-plus-circle"></i> Report IT Issue</h2>
+                    <p>Fill out the form below to report an IT issue. You will receive a Problem ID to track the status of your request.</p>
+                    
+                    <form id="issueForm">
+                        <div class="form-group">
+                            <label for="requesterName"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="requesterName" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department"><i class="fas fa-building"></i> Department</label>
+                            <select id="department" required>
+                                <option value="">Select Department</option>
+                                <option value="Administration">Administration</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Health">Health</option>
+                                <option value="Education">Education</option>
+                                <option value="Works">Works Department</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact"><i class="fas fa-envelope"></i> Contact Information</label>
+                            <input type="text" id="contact" required placeholder="Email or phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="issueType"><i class="fas fa-desktop"></i> Issue Type</label>
+                            <select id="issueType" required>
+                                <option value="">Select Issue Type</option>
+                                <option value="Hardware">Hardware Problem</option>
+                                <option value="Software">Software Problem</option>
+                                <option value="Network">Network/Internet</option>
+                                <option value="Email">Email Issue</option>
+                                <option value="Printer">Printer Issue</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priority"><i class="fas fa-exclamation-triangle"></i> Priority Level</label>
+                            <select id="priority" required>
+                                <option value="low">Low - Minor inconvenience</option>
+                                <option value="medium" selected>Medium - Affects work but not critical</option>
+                                <option value="high">High - Significant impact on work</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description"><i class="fas fa-file-alt"></i> Issue Description</label>
+                            <textarea id="description" required placeholder="Please describe the issue in detail..."></textarea>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-block">
+                                <i class="fas fa-paper-plane"></i> Submit Issue
+                            </button>
+                            <button type="button" class="btn btn-warning" onclick="helpdesk.showSection('dashboard')">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Track Issues Section -->
+            <section id="track" class="section">
+                <div class="card">
+                    <h2><i class="fas fa-search"></i> Track Your Issues</h2>
+                    <p>Enter your Problem ID to check the status of your reported issue.</p>
+                    
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Enter your Problem ID (e.g., TAFO-001)">
+                        <button class="btn" id="searchBtn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-warning" onclick="helpdesk.clearSearch()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+
+                    <div id="track-results">
+                        <div class="no-tickets">
+                            <i class="fas fa-search fa-3x"></i>
+                            <h3>No Problem ID Entered</h3>
+                            <p>Enter your Problem ID above to track your issue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="ticket-header">
+                        <h2><i class="fas fa-list"></i> All Reported Issues</h2>
+                        <div class="action-buttons">
+                            <button class="btn" onclick="helpdesk.showSection('report')">
+                                <i class="fas fa-plus-circle"></i> Report New Issue
+                            </button>
+                            <button class="btn btn-warning" onclick="helpdesk.showSection('dashboard')">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-options">
+                        <button class="filter-btn active" onclick="helpdesk.filterTickets('all')">All Tickets</button>
+                        <button class="filter-btn" onclick="helpdesk.filterTickets('new')">New</button>
+                        <button class="filter-btn" onclick="helpdesk.filterTickets('in-progress')">In Progress</button>
+                        <button class="filter-btn" onclick="helpdesk.filterTickets('resolved')">Resolved</button>
+                        <button class="filter-btn" onclick="helpdesk.filterTickets('high')">High Priority</button>
+                    </div>
+
+                    <div id="all-tickets">
+                        <!-- All tickets will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manage Tickets Section -->
+            <section id="manage" class="section">
+                <div class="card">
+                    <h2><i class="fas fa-cogs"></i> Manage Tickets (IT Staff)</h2>
+                    <p>This section is for IT staff to update ticket status and manage issues.</p>
+                    
+                    <div class="search-box">
+                        <input type="text" id="manageSearch" placeholder="Search by Problem ID or requester name">
+                        <button class="btn" onclick="helpdesk.searchManageTickets()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                        <button class="btn btn-warning" onclick="helpdesk.clearManageSearch()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+
+                    <div id="manage-results">
+                        <!-- Management results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Tafo Municipal Assembly - IT Department. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Enhanced Authentication System with better storage management
+        class AuthSystem {
+            constructor() {
+                this.currentUser = null;
+                this.users = this.loadUsers();
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkExistingSession();
+                this.initializeDefaultUsers();
+            }
+
+            loadUsers() {
+                try {
+                    return JSON.parse(localStorage.getItem('helpdeskUsers')) || {};
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                    return {};
+                }
+            }
+
+            saveUsers() {
+                try {
+                    localStorage.setItem('helpdeskUsers', JSON.stringify(this.users));
+                    return true;
+                } catch (error) {
+                    console.error('Error saving users:', error);
+                    this.showNotification('Error saving user data. Please try again.', 'error');
+                    return false;
+                }
+            }
+
+            initializeDefaultUsers() {
+                // Create default users if none exist
+                if (Object.keys(this.users).length === 0) {
+                    this.users = {
+                        'admin': {
+                            password: 'admin123',
+                            fullName: 'System Administrator',
+                            userType: 'it',
+                            department: null,
+                            registeredAt: new Date().toISOString()
+                        },
+                        'staff': {
+                            password: 'staff123',
+                            fullName: 'Demo Staff Member',
+                            userType: 'staff',
+                            department: 'Administration',
+                            registeredAt: new Date().toISOString()
+                        }
+                    };
+                    this.saveUsers();
+                }
+            }
+
+            setupEventListeners() {
+                // Auth tabs
+                document.querySelectorAll('.auth-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.switchAuthTab(e.target.dataset.tab);
+                    });
+                });
+
+                // Login form
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Register form
+                document.getElementById('registerForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegister();
+                });
+
+                // User type change for registration
+                document.getElementById('regUserType').addEventListener('change', (e) => {
+                    this.toggleDepartmentField(e.target.value);
+                });
+
+                // Input validation
+                document.getElementById('regUsername').addEventListener('input', (e) => {
+                    this.validateUsername(e.target.value);
+                });
+            }
+
+            switchAuthTab(tab) {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
+                
+                document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+                document.getElementById(`${tab}Form`).style.display = 'block';
+
+                if (tab === 'register') {
+                    this.toggleDepartmentField(document.getElementById('regUserType').value);
+                }
+
+                // Clear notifications when switching tabs
+                this.hideNotification();
+            }
+
+            toggleDepartmentField(userType) {
+                const departmentGroup = document.getElementById('regDepartmentGroup');
+                const departmentSelect = document.getElementById('regDepartment');
+                
+                if (userType === 'staff') {
+                    departmentGroup.style.display = 'block';
+                    departmentSelect.required = true;
+                } else {
+                    departmentGroup.style.display = 'none';
+                    departmentSelect.required = false;
+                }
+            }
+
+            validateUsername(username) {
+                if (username.length < 3) {
+                    this.showFieldError('regUsername', 'Username must be at least 3 characters');
+                } else if (this.users[username]) {
+                    this.showFieldError('regUsername', 'Username already exists');
+                } else {
+                    this.clearFieldError('regUsername');
+                }
+            }
+
+            showFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                field.style.borderColor = 'var(--danger)';
+                
+                let errorElement = field.parentNode.querySelector('.field-error');
+                if (!errorElement) {
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'field-error';
+                    field.parentNode.appendChild(errorElement);
+                }
+                errorElement.textContent = message;
+                errorElement.style.color = 'var(--danger)';
+                errorElement.style.fontSize = '0.8rem';
+                errorElement.style.marginTop = '0.25rem';
+            }
+
+            clearFieldError(fieldId) {
+                const field = document.getElementById(fieldId);
+                field.style.borderColor = '';
+                
+                const errorElement = field.parentNode.querySelector('.field-error');
+                if (errorElement) {
+                    errorElement.remove();
+                }
+            }
+
+            checkExistingSession() {
+                try {
+                    const session = localStorage.getItem('helpdeskSession');
+                    if (session) {
+                        this.currentUser = JSON.parse(session);
+                        // Verify user still exists
+                        if (this.users[this.currentUser.username]) {
+                            this.showApp();
+                        } else {
+                            localStorage.removeItem('helpdeskSession');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error checking session:', error);
+                    localStorage.removeItem('helpdeskSession');
+                }
+            }
+
+            async handleLogin() {
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                const loginBtn = document.getElementById('loginBtn');
+
+                if (!username || !password) {
+                    this.showNotification('Please fill in all fields', 'error');
+                    return;
+                }
+
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+                loginBtn.classList.add('loading');
+                loginBtn.disabled = true;
+
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                try {
+                    if (this.users[username] && this.users[username].password === password) {
+                        this.currentUser = { 
+                            username, 
+                            ...this.users[username] 
+                        };
+                        
+                        localStorage.setItem('helpdeskSession', JSON.stringify(this.currentUser));
+                        this.showNotification('Login successful! Redirecting...', 'success');
+                        
+                        setTimeout(() => this.showApp(), 1500);
+                    } else {
+                        this.showNotification('Invalid username or password', 'error');
+                    }
+                } catch (error) {
+                    this.showNotification('Login error: ' + error.message, 'error');
+                }
+
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+
+            async handleRegister() {
+                const username = document.getElementById('regUsername').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const fullName = document.getElementById('regFullName').value.trim();
+                const userType = document.getElementById('regUserType').value;
+                const department = userType === 'staff' ? document.getElementById('regDepartment').value : null;
+                const registerBtn = document.getElementById('registerBtn');
+
+                // Validation
+                if (!username || !password || !fullName || !userType) {
+                    this.showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+
+                if (username.length < 3) {
+                    this.showNotification('Username must be at least 3 characters', 'error');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    this.showNotification('Password must be at least 6 characters', 'error');
+                    return;
+                }
+
+                if (this.users[username]) {
+                    this.showNotification('Username already exists', 'error');
+                    return;
+                }
+
+                registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+                registerBtn.classList.add('loading');
+                registerBtn.disabled = true;
+
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                try {
+                    this.users[username] = {
+                        password,
+                        fullName,
+                        userType,
+                        department,
+                        registeredAt: new Date().toISOString()
+                    };
+
+                    if (this.saveUsers()) {
+                        this.showNotification('Registration successful! Please login with your new account.', 'success');
+                        
+                        // Switch to login tab and pre-fill username
+                        this.switchAuthTab('login');
+                        document.getElementById('loginUsername').value = username;
+                        document.getElementById('loginPassword').value = '';
+                        
+                        // Clear register form
+                        document.getElementById('registerForm').reset();
+                    }
+                } catch (error) {
+                    this.showNotification('Registration error: ' + error.message, 'error');
+                }
+
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                registerBtn.classList.remove('loading');
+                registerBtn.disabled = false;
+            }
+
+            showApp() {
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                
+                // Update UI with user info
+                document.getElementById('userWelcome').textContent = `Welcome, ${this.currentUser.fullName}!`;
+                const badge = document.getElementById('userBadge');
+                badge.textContent = this.currentUser.userType === 'it' ? 'IT Staff' : 'Staff';
+                badge.className = `user-badge ${this.currentUser.userType}`;
+
+                // Show/hide manage tab based on user type
+                const manageTab = document.getElementById('manageTab');
+                manageTab.style.display = this.currentUser.userType === 'it' ? 'flex' : 'none';
+
+                // Initialize helpdesk system
+                helpdesk.init(this.currentUser);
+            }
+
+            logout() {
+                localStorage.removeItem('helpdeskSession');
+                this.currentUser = null;
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('authContainer').style.display = 'flex';
+                
+                // Clear forms and switch to login tab
+                this.switchAuthTab('login');
+                document.getElementById('loginForm').reset();
+                document.getElementById('registerForm').reset();
+                
+                this.showNotification('You have been logged out successfully', 'info');
+            }
+
+            showNotification(message, type) {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    this.hideNotification();
+                }, 5000);
+            }
+
+            hideNotification() {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'none';
+            }
+        }
+
+        // Initialize authentication system
+        const authSystem = new AuthSystem();
+
+        // Helpdesk System
+        class ITHelpdesk {
+            constructor() {
+                this.tickets = [];
+                this.nextId = 1;
+                this.currentFilter = 'all';
+                this.currentUser = null;
+            }
+
+            init(user) {
+                this.currentUser = user;
+                this.initializeData();
+                this.setupEventListeners();
+                this.updateDashboard();
+            }
+
+            setupEventListeners() {
+                // Mobile menu toggle
+                document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+                    const navContainer = document.getElementById('navContainer');
+                    navContainer.classList.toggle('mobile-open');
+                });
+
+                // Navigation
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const tabId = e.currentTarget.getAttribute('data-tab');
+                        this.showSection(tabId);
+                        document.getElementById('navContainer').classList.remove('mobile-open');
+                    });
+                });
+
+                // Form submission
+                document.getElementById('issueForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.submitIssue();
+                });
+
+                // Search functionality
+                document.getElementById('searchBtn').addEventListener('click', () => this.searchTickets());
+                document.getElementById('searchInput').addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') this.searchTickets();
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    const navContainer = document.getElementById('navContainer');
+                    const mobileBtn = document.getElementById('mobileMenuBtn');
+                    
+                    if (!navContainer.contains(e.target) && !mobileBtn.contains(e.target)) {
+                        navContainer.classList.remove('mobile-open');
+                    }
+                });
+            }
+
+            showSection(sectionId) {
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                
+                document.querySelector(`[data-tab="${sectionId}"]`).classList.add('active');
+                document.getElementById(sectionId).classList.add('active');
+                
+                if (sectionId === 'dashboard') {
+                    this.updateDashboard();
+                } else if (sectionId === 'track') {
+                    this.displayAllTickets();
+                } else if (sectionId === 'manage' && this.currentUser.userType === 'it') {
+                    this.displayAllTicketsForManagement();
+                }
+            }
+
+            initializeData() {
+                try {
+                    const savedTickets = localStorage.getItem('itTickets');
+                    if (savedTickets) {
+                        this.tickets = JSON.parse(savedTickets);
+                        this.tickets.forEach(ticket => {
+                            const idNum = parseInt(ticket.id.split('-')[1]);
+                            if (idNum >= this.nextId) this.nextId = idNum + 1;
+                        });
+                    } else {
+                        this.tickets = [
+                            {
+                                id: 'TAFO-001',
+                                requesterName: 'John Smith',
+                                department: 'Finance',
+                                contact: 'john.smith@tafo.gov.gh',
+                                issueType: 'Software',
+                                priority: 'high',
+                                description: 'Microsoft Excel not opening, showing error message when trying to access financial reports.',
+                                status: 'in-progress',
+                                createdAt: new Date().toLocaleString(),
+                                createdBy: 'system'
+                            },
+                            {
+                                id: 'TAFO-002',
+                                requesterName: 'Mary Johnson',
+                                department: 'Administration',
+                                contact: 'maryj@tafo.gov.gh',
+                                issueType: 'Hardware',
+                                priority: 'medium',
+                                description: 'Computer monitor flickering intermittently, making it difficult to read documents.',
+                                status: 'new',
+                                createdAt: new Date().toLocaleString(),
+                                createdBy: 'system'
+                            }
+                        ];
+                        this.saveToStorage();
+                        this.nextId = 3;
+                    }
+                } catch (error) {
+                    console.error('Error initializing data:', error);
+                    this.tickets = [];
+                    this.nextId = 1;
+                }
+            }
+
+            // ... (rest of your ITHelpdesk methods remain the same as in your previous code)
+            // Including: generateProblemId, submitIssue, updateDashboard, saveToStorage, 
+            // searchTickets, displayAllTickets, filterTickets, and management functions
+
+            generateProblemId() {
+                const id = `TAFO-${this.nextId.toString().padStart(3, '0')}`;
+                this.nextId++;
+                return id;
+            }
+
+            submitIssue() {
+                const problemId = this.generateProblemId();
+                const ticket = {
+                    id: problemId,
+                    requesterName: document.getElementById('requesterName').value,
+                    department: document.getElementById('department').value,
+                    contact: document.getElementById('contact').value,
+                    issueType: document.getElementById('issueType').value,
+                    priority: document.getElementById('priority').value,
+                    description: document.getElementById('description').value,
+                    status: 'new',
+                    createdAt: new Date().toLocaleString(),
+                    createdBy: this.currentUser.username
+                };
+                
+                this.tickets.push(ticket);
+                this.saveToStorage();
+                
+                this.showNotification(`Issue reported successfully! Your Problem ID: ${problemId}`, 'success');
+                document.getElementById('issueForm').reset();
+                this.updateDashboard();
+            }
+
+            updateDashboard() {
+                const totalTickets = this.tickets.length;
+                const openTickets = this.tickets.filter(ticket => ticket.status === 'new').length;
+                const progressTickets = this.tickets.filter(ticket => ticket.status === 'in-progress').length;
+                const resolvedTickets = this.tickets.filter(ticket => ticket.status === 'resolved').length;
+
+                document.getElementById('total-tickets').textContent = totalTickets;
+                document.getElementById('open-tickets').textContent = openTickets;
+                document.getElementById('progress-tickets').textContent = progressTickets;
+                document.getElementById('resolved-tickets').textContent = resolvedTickets;
+
+                // Display recent tickets (last 3)
+                const recentTickets = [...this.tickets].reverse().slice(0, 3);
+                const recentTicketsContainer = document.getElementById('recent-tickets');
+                
+                if (recentTickets.length === 0) {
+                    recentTicketsContainer.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-clipboard-list fa-3x"></i>
+                            <h3>No Tickets Yet</h3>
+                            <p>No IT issues have been reported yet.</p>
+                        </div>
+                    `;
+                } else {
+                    recentTicketsContainer.innerHTML = recentTickets.map(ticket => `
+                        <div class="ticket">
+                            <div class="ticket-header">
+                                <span class="ticket-id">${ticket.id}</span>
+                                <span class="priority priority-${ticket.priority}">${ticket.priority} Priority</span>
+                                <span class="status status-${ticket.status}">${ticket.status.replace('-', ' ')}</span>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Requester:</span>
+                                    <span>${ticket.requesterName} (${ticket.department})</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Issue:</span>
+                                    <span>${ticket.issueType}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Description:</span>
+                                    <span>${ticket.description.substring(0, 100)}${ticket.description.length > 100 ? '...' : ''}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Submitted:</span>
+                                    <span>${ticket.createdAt}</span>
+                                </div>
+                            </div>
+                            <div class="ticket-actions">
+                                <button class="btn" onclick="helpdesk.searchTicket('${ticket.id}')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            saveToStorage() {
+                try {
+                    localStorage.setItem('itTickets', JSON.stringify(this.tickets));
+                return true;
+                } catch (error) {
+                    console.error('Error saving tickets:', error);
+                    this.showNotification('Error saving data. Please try again.', 'error');
+                    return false;
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.textContent = message;
+                notification.className = `notification ${type} show`;
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '300px';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
+
+            searchTickets() {
+                const searchTerm = document.getElementById('searchInput').value.trim().toUpperCase();
+                const resultsContainer = document.getElementById('track-results');
+                
+                if (!searchTerm) {
+                    resultsContainer.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-search fa-3x"></i>
+                            <h3>No Problem ID Entered</h3>
+                            <p>Enter your Problem ID above to track your issue</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const foundTicket = this.tickets.find(ticket => ticket.id === searchTerm);
+                
+                if (foundTicket) {
+                    resultsContainer.innerHTML = `
+                        <div class="ticket">
+                            <div class="ticket-header">
+                                <span class="ticket-id">${foundTicket.id}</span>
+                                <span class="priority priority-${foundTicket.priority}">${foundTicket.priority} Priority</span>
+                                <span class="status status-${foundTicket.status}">${foundTicket.status.replace('-', ' ')}</span>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Requester:</span>
+                                    <span>${foundTicket.requesterName} (${foundTicket.department})</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Contact:</span>
+                                    <span>${foundTicket.contact}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Issue:</span>
+                                    <span>${foundTicket.issueType}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Description:</span>
+                                    <span>${foundTicket.description}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Submitted:</span>
+                                    <span>${foundTicket.createdAt}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Status:</span>
+                                    <span><strong>${foundTicket.status.replace('-', ' ').toUpperCase()}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-times fa-3x"></i>
+                            <h3>Problem ID Not Found</h3>
+                            <p>No issue found with Problem ID: <strong>${searchTerm}</strong></p>
+                            <p>Please check the ID and try again.</p>
+                        </div>
+                    `;
+                }
+            }
+
+            searchTicket(ticketId) {
+                document.getElementById('searchInput').value = ticketId;
+                this.showSection('track');
+                this.searchTickets();
+            }
+
+            clearSearch() {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('track-results').innerHTML = `
+                    <div class="no-tickets">
+                        <i class="fas fa-search fa-3x"></i>
+                        <h3>No Problem ID Entered</h3>
+                        <p>Enter your Problem ID above to track your issue</p>
+                    </div>
+                `;
+            }
+
+            displayAllTickets() {
+                this.displayFilteredTickets(this.tickets, 'all-tickets');
+            }
+
+            displayFilteredTickets(ticketList, containerId) {
+                const container = document.getElementById(containerId);
+                
+                if (ticketList.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-clipboard-list fa-3x"></i>
+                            <h3>No Issues Found</h3>
+                            <p>No IT issues match your current filter.</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = ticketList.map(ticket => `
+                        <div class="ticket">
+                            <div class="ticket-header">
+                                <span class="ticket-id">${ticket.id}</span>
+                                <span class="priority priority-${ticket.priority}">${ticket.priority} Priority</span>
+                                <span class="status status-${ticket.status}">${ticket.status.replace('-', ' ')}</span>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Requester:</span>
+                                    <span>${ticket.requesterName} (${ticket.department})</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Contact:</span>
+                                    <span>${ticket.contact}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Issue:</span>
+                                    <span>${ticket.issueType}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Description:</span>
+                                    <span>${ticket.description}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Submitted:</span>
+                                    <span>${ticket.createdAt}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            filterTickets(filter) {
+                this.currentFilter = filter;
+                
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+                
+                let filteredTickets = [];
+                
+                switch(filter) {
+                    case 'all': filteredTickets = this.tickets; break;
+                    case 'new': filteredTickets = this.tickets.filter(t => t.status === 'new'); break;
+                    case 'in-progress': filteredTickets = this.tickets.filter(t => t.status === 'in-progress'); break;
+                    case 'resolved': filteredTickets = this.tickets.filter(t => t.status === 'resolved'); break;
+                    case 'high': filteredTickets = this.tickets.filter(t => t.priority === 'high'); break;
+                }
+                
+                this.displayFilteredTickets(filteredTickets, 'all-tickets');
+            }
+
+            displayAllTicketsForManagement() {
+                const container = document.getElementById('manage-results');
+                
+                if (this.tickets.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-clipboard-list fa-3x"></i>
+                            <h3>No Tickets to Manage</h3>
+                            <p>No IT issues have been reported yet.</p>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = this.tickets.map(ticket => `
+                        <div class="ticket">
+                            <div class="ticket-header">
+                                <span class="ticket-id">${ticket.id}</span>
+                                <span class="priority priority-${ticket.priority}">${ticket.priority} Priority</span>
+                                <span class="status status-${ticket.status}">${ticket.status.replace('-', ' ')}</span>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Requester:</span>
+                                    <span>${ticket.requesterName} (${ticket.department})</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Contact:</span>
+                                    <span>${ticket.contact}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Issue:</span>
+                                    <span>${ticket.issueType}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Description:</span>
+                                    <span>${ticket.description}</span>
+                                </div>
+                                <div class="ticket-detail">
+                                    <span class="detail-label">Submitted:</span>
+                                    <span>${ticket.createdAt}</span>
+                                </div>
+                            </div>
+                            <div class="ticket-actions">
+                                <button class="btn" onclick="helpdesk.updateStatus('${ticket.id}', 'new')" ${ticket.status === 'new' ? 'disabled' : ''}>
+                                    <i class="fas fa-flag"></i> Mark as New
+                                </button>
+                                <button class="btn btn-warning" onclick="helpdesk.updateStatus('${ticket.id}', 'in-progress')" ${ticket.status === 'in-progress' ? 'disabled' : ''}>
+                                    <i class="fas fa-tools"></i> In Progress
+                                </button>
+                                <button class="btn btn-success" onclick="helpdesk.updateStatus('${ticket.id}', 'resolved')" ${ticket.status === 'resolved' ? 'disabled' : ''}>
+                                    <i class="fas fa-check"></i> Resolve
+                                </button>
+                                <button class="btn btn-danger" onclick="helpdesk.deleteTicket('${ticket.id}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            updateStatus(ticketId, newStatus) {
+                const ticketIndex = this.tickets.findIndex(ticket => ticket.id === ticketId);
+                if (ticketIndex !== -1) {
+                    this.tickets[ticketIndex].status = newStatus;
+                    this.tickets[ticketIndex].updatedBy = this.currentUser.username;
+                    this.tickets[ticketIndex].updatedAt = new Date().toLocaleString();
+                    this.saveToStorage();
+                    this.displayAllTicketsForManagement();
+                    this.updateDashboard();
+                    this.showNotification(`Ticket ${ticketId} status updated to ${newStatus.replace('-', ' ')}`, 'success');
+                }
+            }
+
+            deleteTicket(ticketId) {
+                if (confirm(`Are you sure you want to delete ticket ${ticketId}? This action cannot be undone.`)) {
+                    this.tickets = this.tickets.filter(ticket => ticket.id !== ticketId);
+                    this.saveToStorage();
+                    this.displayAllTicketsForManagement();
+                    this.updateDashboard();
+                    this.showNotification(`Ticket ${ticketId} has been deleted`, 'success');
+                }
+            }
+
+            searchManageTickets() {
+                const searchTerm = document.getElementById('manageSearch').value.trim().toLowerCase();
+                const container = document.getElementById('manage-results');
+                
+                if (!searchTerm) {
+                    this.displayAllTicketsForManagement();
+                    return;
+                }
+
+                const filteredTickets = this.tickets.filter(ticket => 
+                    ticket.id.toLowerCase().includes(searchTerm) ||
+                    ticket.requesterName.toLowerCase().includes(searchTerm) ||
+                    ticket.department.toLowerCase().includes(searchTerm)
+                );
+
+                if (filteredTickets.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-tickets">
+                            <i class="fas fa-search fa-3x"></i>
+                            <h3>No Tickets Found</h3>
+                            <p>No tickets match your search criteria.</p>
+                        </div>
+                    `;
+                } else {
+                    this.displayFilteredTickets(filteredTickets, 'manage-results');
+                }
+            }
+
+            clearManageSearch() {
+                document.getElementById('manageSearch').value = '';
+                this.displayAllTicketsForManagement();
+            }
+        }
+
+        // Initialize helpdesk system
+        const helpdesk = new ITHelpdesk();
+    </script>
+</body>
+</html>
